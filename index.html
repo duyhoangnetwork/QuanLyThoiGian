@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch Công Việc - Trình quản lý cá nhân cao cấp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-mode">
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="app-logo">
+          <div class="logo-icon">
+            <div class="logo-inner"></div>
+          </div>
+          <span class="logo-text">Lịch Công Việc</span>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard" id="nav-dashboard">
+          <span class="css-icon icon-home"></span>
+          <span class="nav-label">Trang chủ</span>
+        </button>
+        <button class="nav-item" data-page="calendar" id="nav-calendar">
+          <span class="css-icon icon-calendar"></span>
+          <span class="nav-label">Lịch hôm nay</span>
+        </button>
+        <button class="nav-item" data-page="categories" id="nav-categories">
+          <span class="css-icon icon-category"></span>
+          <span class="nav-label">Danh mục</span>
+        </button>
+        <button class="nav-item" data-page="history" id="nav-history">
+          <span class="css-icon icon-history"></span>
+          <span class="nav-label">Lịch sử</span>
+        </button>
+        <button class="nav-item" data-page="settings" id="nav-settings">
+          <span class="css-icon icon-settings"></span>
+          <span class="nav-label">Cài đặt</span>
+        </button>
+        <button class="nav-item" data-page="about" id="nav-about">
+          <span class="css-icon icon-about"></span>
+          <span class="nav-label">Giới thiệu</span>
+        </button>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="sidebar-theme-toggle" id="theme-toggle-sidebar">
+          <div class="toggle-track">
+            <span class="css-icon icon-sun"></span>
+            <span class="css-icon icon-moon"></span>
+            <div class="toggle-thumb"></div>
+          </div>
+          <span class="theme-label">Chế độ tối</span>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Bar / Navbar -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="menu-toggle-btn" id="menu-toggle-btn" aria-label="Mở menu">
+            <span class="css-icon icon-menu"></span>
+          </button>
+          <div class="breadcrumb-container">
+            <h1 class="page-title" id="page-title">Trang chủ</h1>
+          </div>
+        </div>
+        
+        <div class="top-bar-right">
+          <!-- Live Clock -->
+          <div class="live-clock-container">
+            <span class="live-date" id="live-date">Thứ Sáu, 17/07/2026</span>
+            <span class="live-time" id="live-time">13:25:00</span>
+          </div>
+          
+          <!-- Add Task Button -->
+          <button class="btn btn-primary" id="btn-quick-add">
+            <span class="css-icon icon-plus white"></span>
+            <span class="btn-text">Thêm việc</span>
+          </button>
+        </div>
+      </header>
+      
+      <!-- Content Pages Container -->
+      <div class="content-body">
+        
+        <!-- ==================================== -->
+        <!-- 1. DASHBOARD PAGE -->
+        <!-- ==================================== -->
+        <section class="page-panel active" id="page-dashboard">
+          <!-- Welcome Greeting banner -->
+          <div class="welcome-banner">
+            <div class="welcome-text">
+              <h2 id="dashboard-greeting">Xin chào!</h2>
+              <p>Chúc bạn một ngày làm việc hiệu quả và tràn đầy năng lượng.</p>
+            </div>
+            <div class="welcome-graphic">
+              <!-- Handcrafted CSS decoration -->
+              <div class="circle-graphic gp-1"></div>
+              <div class="circle-graphic gp-2"></div>
+            </div>
+          </div>
+          
+          <!-- Statistics Cards Grid -->
+          <div class="stats-grid">
+            <div class="stats-card" data-filter="all">
+              <div class="card-header">
+                <span class="stats-label">Việc hôm nay</span>
+                <span class="css-icon icon-stat-today"></span>
+              </div>
+              <div class="stats-value" id="stat-today-val">0</div>
+              <div class="stats-desc">Tổng số công việc cần làm</div>
+            </div>
+            
+            <div class="stats-card stats-completed" data-filter="completed">
+              <div class="card-header">
+                <span class="stats-label">Đã hoàn thành</span>
+                <span class="css-icon icon-stat-done"></span>
+              </div>
+              <div class="stats-value" id="stat-completed-val">0</div>
+              <div class="stats-desc" id="stat-completed-pct">0% tỷ lệ hoàn thành</div>
+            </div>
+            
+            <div class="stats-card stats-pending" data-filter="pending">
+              <div class="card-header">
+                <span class="stats-label">Đang chờ</span>
+                <span class="css-icon icon-stat-pending"></span>
+              </div>
+              <div class="stats-value" id="stat-pending-val">0</div>
+              <div class="stats-desc">Công việc đang chờ thực hiện</div>
+            </div>
+            
+            <div class="stats-card stats-overdue" data-filter="overdue">
+              <div class="card-header">
+                <span class="stats-label">Quá hạn</span>
+                <span class="css-icon icon-stat-overdue"></span>
+              </div>
+              <div class="stats-value" id="stat-overdue-val">0</div>
+              <div class="stats-desc">Công việc trễ thời gian hẹn</div>
+            </div>
+          </div>
+          
+          <!-- Dashboard Content Splitted (Timeline & Upcoming) -->
+          <div class="dashboard-layout">
+            <!-- Timeline -->
+            <div class="dashboard-col timeline-section">
+              <div class="section-title-bar">
+                <h3>Trình tự thời gian hôm nay</h3>
+                <span class="subtitle">Lịch trình chi tiết</span>
+              </div>
+              <div class="timeline-container" id="dashboard-timeline">
+                <div class="timeline-empty">Không có công việc nào trong ngày hôm nay. Hãy bắt đầu bằng cách thêm một công việc mới!</div>
+              </div>
+            </div>
+            
+            <!-- Upcoming Tasks -->
+            <div class="dashboard-col upcoming-section">
+              <div class="section-title-bar">
+                <h3>Công việc sắp tới</h3>
+                <span class="subtitle">Nhắc nhở tiếp theo</span>
+              </div>
+              <div class="upcoming-list" id="dashboard-upcoming">
+                <div class="upcoming-empty">Không có công việc sắp tới cần nhắc nhở.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- ==================================== -->
+        <!-- 2. CALENDAR PAGE -->
+        <!-- ==================================== -->
+        <section class="page-panel" id="page-calendar">
+          <div class="calendar-view-layout">
+            
+            <!-- Left Side: Calendar Widget -->
+            <div class="calendar-widget-panel">
+              <div class="calendar-header-controls">
+                <button class="btn btn-icon-round" id="btn-cal-prev" aria-label="Tháng trước">
+                  <span class="css-icon icon-chevron-left"></span>
+                </button>
+                <h3 class="calendar-month-year" id="calendar-title">Tháng 07, 2026</h3>
+                <button class="btn btn-icon-round" id="btn-cal-next" aria-label="Tháng sau">
+                  <span class="css-icon icon-chevron-right"></span>
+                </button>
+              </div>
+              
+              <!-- Calendar Matrix -->
+              <div class="calendar-grid-header">
+                <div>CN</div>
+                <div>T2</div>
+                <div>T3</div>
+                <div>T4</div>
+                <div>T5</div>
+                <div>T6</div>
+                <div>T7</div>
+              </div>
+              <div class="calendar-grid-days" id="calendar-days">
+                <!-- Days grid populated by JS -->
+              </div>
+            </div>
+            
+            <!-- Right Side: Selected Day Tasks / Filters -->
+            <div class="calendar-tasks-panel">
+              <div class="calendar-tasks-header">
+                <div class="selected-day-title">
+                  <h3 id="cal-selected-day-label">Hôm nay - 17/07/2026</h3>
+                  <p class="subtitle" id="cal-selected-day-count">0 công việc</p>
+                </div>
+                
+                <!-- Quick Search & Filters -->
+                <div class="tasks-filters-bar">
+                  <div class="search-input-wrapper">
+                    <span class="css-icon icon-search-input"></span>
+                    <input type="text" id="task-search-input" placeholder="Tìm kiếm công việc...">
+                    <button class="search-clear-btn" id="search-clear-btn" style="display:none;">&times;</button>
+                  </div>
+                  
+                  <div class="filters-row">
+                    <select id="filter-category" class="form-select select-sm">
+                      <option value="all">Tất cả danh mục</option>
+                      <option value="Học tập">Học tập</option>
+                      <option value="Công việc">Công việc</option>
+                      <option value="Cá nhân">Cá nhân</option>
+                      <option value="Gia đình">Gia đình</option>
+                      <option value="Sức khỏe">Sức khỏe</option>
+                      <option value="Khác">Khác</option>
+                    </select>
+                    
+                    <select id="filter-priority" class="form-select select-sm">
+                      <option value="all">Tất cả ưu tiên</option>
+                      <option value="Thấp">Ưu tiên Thấp</option>
+                      <option value="Trung bình">Ưu tiên Trung bình</option>
+                      <option value="Cao">Ưu tiên Cao</option>
+                    </select>
+                    
+                    <select id="filter-status" class="form-select select-sm">
+                      <option value="all">Tất cả trạng thái</option>
+                      <option value="Chưa bắt đầu">Chưa bắt đầu</option>
+                      <option value="Đang thực hiện">Đang thực hiện</option>
+                      <option value="Hoàn thành">Hoàn thành</option>
+                      <option value="Quá hạn">Quá hạn</option>
+                    </select>
+                  </div>
+                  
+                  <div class="sorting-row">
+                    <span class="sort-label">Sắp xếp:</span>
+                    <select id="sort-tasks" class="form-select select-sm">
+                      <option value="time">Thời gian</option>
+                      <option value="newest">Mới nhất</option>
+                      <option value="oldest">Cũ nhất</option>
+                      <option value="priority">Mức độ ưu tiên</option>
+                      <option value="completed">Trạng thái hoàn thành</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Task List Container -->
+              <div class="calendar-task-list" id="calendar-task-list">
+                <div class="tasks-empty">Không tìm thấy công việc nào.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- ==================================== -->
+        <!-- 3. CATEGORIES PAGE -->
+        <!-- ==================================== -->
+        <section class="page-panel" id="page-categories">
+          <div class="categories-grid" id="categories-grid-container">
+            <!-- Category: Học tập -->
+            <div class="category-card" data-category="Học tập">
+              <div class="category-card-accent" style="background-color: var(--cat-study);"></div>
+              <div class="category-icon-wrapper" style="background-color: var(--cat-study-light);">
+                <span class="css-icon icon-cat-study"></span>
+              </div>
+              <h3 class="category-name">Học tập</h3>
+              <p class="category-count" id="cat-count-study">0 công việc</p>
+              <div class="category-progress-bar">
+                <div class="progress-fill" id="cat-progress-study" style="width: 0%"></div>
+              </div>
+              <div class="category-progress-text" id="cat-pct-study">0% Hoàn thành</div>
+            </div>
+            
+            <!-- Category: Công việc -->
+            <div class="category-card" data-category="Công việc">
+              <div class="category-card-accent" style="background-color: var(--cat-work);"></div>
+              <div class="category-icon-wrapper" style="background-color: var(--cat-work-light);">
+                <span class="css-icon icon-cat-work"></span>
+              </div>
+              <h3 class="category-name">Công việc</h3>
+              <p class="category-count" id="cat-count-work">0 công việc</p>
+              <div class="category-progress-bar">
+                <div class="progress-fill" id="cat-progress-work" style="width: 0%"></div>
+              </div>
+              <div class="category-progress-text" id="cat-pct-work">0% Hoàn thành</div>
+            </div>
+            
+            <!-- Category: Cá nhân -->
+            <div class="category-card" data-category="Cá nhân">
+              <div class="category-card-accent" style="background-color: var(--cat-personal);"></div>
+              <div class="category-icon-wrapper" style="background-color: var(--cat-personal-light);">
+                <span class="css-icon icon-cat-personal"></span>
+              </div>
+              <h3 class="category-name">Cá nhân</h3>
+              <p class="category-count" id="cat-count-personal">0 công việc</p>
+              <div class="category-progress-bar">
+                <div class="progress-fill" id="cat-progress-personal" style="width: 0%"></div>
+              </div>
+              <div class="category-progress-text" id="cat-pct-personal">0% Hoàn thành</div>
+            </div>
+            
+            <!-- Category: Gia đình -->
+            <div class="category-card" data-category="Gia đình">
+              <div class="category-card-accent" style="background-color: var(--cat-family);"></div>
+              <div class="category-icon-wrapper" style="background-color: var(--cat-family-light);">
+                <span class="css-icon icon-cat-family"></span>
+              </div>
+              <h3 class="category-name">Gia đình</h3>
+              <p class="category-count" id="cat-count-family">0 công việc</p>
+              <div class="category-progress-bar">
+                <div class="progress-fill" id="cat-progress-family" style="width: 0%"></div>
+              </div>
+              <div class="category-progress-text" id="cat-pct-family">0% Hoàn thành</div>
+            </div>
+            
+            <!-- Category: Sức khỏe -->
+            <div class="category-card" data-category="Sức khỏe">
+              <div class="category-card-accent" style="background-color: var(--cat-health);"></div>
+              <div class="category-icon-wrapper" style="background-color: var(--cat-health-light);">
+                <span class="css-icon icon-cat-health"></span>
+              </div>
+              <h3 class="category-name">Sức khỏe</h3>
+              <p class="category-count" id="cat-count-health">0 công việc</p>
+              <div class="category-progress-bar">
+                <div class="progress-fill" id="cat-progress-health" style="width: 0%"></div>
+              </div>
+              <div class="category-progress-text" id="cat-pct-health">0% Hoàn thành</div>
+            </div>
+            
+            <!-- Category: Khác -->
+            <div class="category-card" data-category="Khác">
+              <div class="category-card-accent" style="background-color: var(--cat-other);"></div>
+              <div class="category-icon-wrapper" style="background-color: var(--cat-other-light);">
+                <span class="css-icon icon-cat-other"></span>
+              </div>
+              <h3 class="category-name">Khác</h3>
+              <p class="category-count" id="cat-count-other">0 công việc</p>
+              <div class="category-progress-bar">
+                <div class="progress-fill" id="cat-progress-other" style="width: 0%"></div>
+              </div>
+              <div class="category-progress-text" id="cat-pct-other">0% Hoàn thành</div>
+            </div>
+          </div>
+          
+          <!-- Selected Category Task View -->
+          <div class="selected-category-section" id="selected-category-section" style="display:none;">
+            <div class="category-section-title-bar">
+              <button class="btn btn-secondary btn-sm" id="btn-back-categories">
+                <span class="css-icon icon-arrow-left"></span> Quay lại
+              </button>
+              <h3 id="selected-category-title">Danh mục</h3>
+            </div>
+            <div class="calendar-task-list" id="category-task-list">
+              <!-- Category tasks will be rendered here -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- ==================================== -->
+        <!-- 4. HISTORY PAGE -->
+        <!-- ==================================== -->
+        <section class="page-panel" id="page-history">
+          <!-- History Stats -->
+          <div class="history-stats-grid">
+            <div class="history-stat-card">
+              <span class="h-stat-label">Tổng số việc đã tạo</span>
+              <span class="h-stat-value" id="hist-total-created">0</span>
+            </div>
+            <div class="history-stat-card text-success">
+              <span class="h-stat-label">Nhiệm vụ đã hoàn thành</span>
+              <span class="h-stat-value" id="hist-total-completed">0</span>
+            </div>
+            <div class="history-stat-card text-danger">
+              <span class="h-stat-label">Nhiệm vụ đã xóa</span>
+              <span class="h-stat-value" id="hist-total-deleted">0</span>
+            </div>
+            <div class="history-stat-card text-primary">
+              <span class="h-stat-label">Hiệu suất hoàn thành</span>
+              <span class="h-stat-value" id="hist-performance-pct">0%</span>
+            </div>
+          </div>
+          
+          <div class="history-layout">
+            <!-- Completed Tab/Section -->
+            <div class="history-col">
+              <div class="history-col-header">
+                <h3>Công việc hoàn thành gần đây</h3>
+                <button class="btn btn-secondary btn-xs" id="btn-clear-completed-hist">Dọn sạch</button>
+              </div>
+              <div class="history-list" id="history-completed-list">
+                <div class="history-empty">Chưa có công việc nào hoàn thành.</div>
+              </div>
+            </div>
+            
+            <!-- Deleted Tab/Section -->
+            <div class="history-col">
+              <div class="history-col-header">
+                <h3>Thùng rác (Công việc đã xóa)</h3>
+                <button class="btn btn-secondary btn-xs" id="btn-clear-deleted-hist">Dọn sạch</button>
+              </div>
+              <div class="history-list" id="history-deleted-list">
+                <div class="history-empty">Thùng rác trống.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- ==================================== -->
+        <!-- 5. SETTINGS PAGE -->
+        <!-- ==================================== -->
+        <section class="page-panel" id="page-settings">
+          <div class="settings-container">
+            <!-- General Settings Section -->
+            <div class="settings-section">
+              <h3 class="settings-section-title">Giao diện & Cài đặt chung</h3>
+              
+              <!-- Dark Mode Switch -->
+              <div class="setting-item">
+                <div class="setting-info">
+                  <span class="setting-label">Chế độ giao diện tối (Dark Mode)</span>
+                  <span class="setting-desc">Chuyển đổi giao diện sáng hoặc tối cho ứng dụng.</span>
+                </div>
+                <div class="setting-control">
+                  <div class="toggle-switch-wrapper">
+                    <input type="checkbox" id="setting-dark-mode" class="toggle-checkbox">
+                    <label for="setting-dark-mode" class="toggle-label-switch"></label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Auto Save -->
+              <div class="setting-item">
+                <div class="setting-info">
+                  <span class="setting-label">Tự động sao lưu dữ liệu</span>
+                  <span class="setting-desc">Tự động lưu trữ thay đổi của bạn vào bộ nhớ trình duyệt (LocalStorage).</span>
+                </div>
+                <div class="setting-control">
+                  <div class="toggle-switch-wrapper">
+                    <input type="checkbox" id="setting-auto-save" class="toggle-checkbox" checked disabled>
+                    <label for="setting-auto-save" class="toggle-label-switch"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Telegram Integration Settings -->
+            <div class="settings-section">
+              <h3 class="settings-section-title">Tích hợp thông báo Telegram</h3>
+              <p class="settings-section-desc">Cấu hình Bot Telegram của riêng bạn để tự động nhận thông báo nhắc nhở và thông báo hoàn thành nhiệm vụ.</p>
+              
+              <div class="form-group">
+                <label for="setting-telegram-token" class="form-label">Telegram Bot Token</label>
+                <input type="password" id="setting-telegram-token" class="form-input" placeholder="Nhập Token của Bot">
+                <p class="form-help-text">Mã bảo mật được cấp bởi @BotFather khi bạn tạo Bot mới.</p>
+              </div>
+              
+              <div class="form-group">
+                <label for="setting-telegram-chatid" class="form-label">Telegram Chat ID</label>
+                <input type="text" id="setting-telegram-chatid" class="form-input" placeholder="Nhập ID cuộc trò chuyện">
+                <p class="form-help-text">ID của cuộc trò chuyện cá nhân hoặc nhóm của bạn với Bot (ví dụ: 6286372153).</p>
+              </div>
+              
+              <div class="settings-actions-row">
+                <button class="btn btn-secondary" id="btn-test-telegram">Gửi tin nhắn thử nghiệm</button>
+                <button class="btn btn-primary" id="btn-save-telegram">Lưu cấu hình Telegram</button>
+              </div>
+            </div>
+            
+            <!-- Notification Settings -->
+            <div class="settings-section">
+              <h3 class="settings-section-title">Âm thanh & Thông báo trình duyệt</h3>
+              
+              <!-- Enable sound -->
+              <div class="setting-item">
+                <div class="setting-info">
+                  <span class="setting-label">Phát âm thanh thông báo</span>
+                  <span class="setting-desc">Âm thanh báo thức bíp-bíp phát qua loa khi đến giờ công việc.</span>
+                </div>
+                <div class="setting-control">
+                  <div class="toggle-switch-wrapper">
+                    <input type="checkbox" id="setting-sound" class="toggle-checkbox" checked>
+                    <label for="setting-sound" class="toggle-label-switch"></label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Enable system notification -->
+              <div class="setting-item">
+                <div class="setting-info">
+                  <span class="setting-label">Thông báo hệ thống (Browser Notifications)</span>
+                  <span class="setting-desc">Hiển thị thông báo dạng Pop-up ở khay hệ thống của máy tính khi đến giờ công việc.</span>
+                </div>
+                <div class="setting-control">
+                  <div class="toggle-switch-wrapper">
+                    <input type="checkbox" id="setting-browser-notify" class="toggle-checkbox">
+                    <label for="setting-browser-notify" class="toggle-label-switch"></label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Popup alerts within app -->
+              <div class="setting-item">
+                <div class="setting-info">
+                  <span class="setting-label">Hiển thị hộp thoại nhắc nhở trong ứng dụng</span>
+                  <span class="setting-desc">Hiển thị màn hình cảnh báo chặn đứng khi thời gian đến để yêu cầu xác nhận.</span>
+                </div>
+                <div class="setting-control">
+                  <div class="toggle-switch-wrapper">
+                    <input type="checkbox" id="setting-app-popup" class="toggle-checkbox" checked>
+                    <label for="setting-app-popup" class="toggle-label-switch"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Import/Export & Reset Data -->
+            <div class="settings-section">
+              <h3 class="settings-section-title text-danger">Quản lý dữ liệu hệ thống</h3>
+              <p class="settings-section-desc">Xuất dữ liệu công việc hiện tại ra file sao lưu hoặc nhập lại dữ liệu cũ.</p>
+              
+              <div class="settings-data-actions">
+                <button class="btn btn-secondary" id="btn-export-json">
+                  <span class="css-icon icon-download"></span> Xuất dữ liệu (JSON)
+                </button>
+                
+                <div class="file-import-wrapper">
+                  <button class="btn btn-secondary" id="btn-import-trigger">
+                    <span class="css-icon icon-upload"></span> Nhập dữ liệu (JSON)
+                  </button>
+                  <input type="file" id="import-json-file" accept=".json" style="display:none;">
+                </div>
+                
+                <button class="btn btn-danger" id="btn-reset-data">
+                  <span class="css-icon icon-trash"></span> Xóa sạch dữ liệu
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- ==================================== -->
+        <!-- 6. ABOUT PAGE -->
+        <!-- ==================================== -->
+        <section class="page-panel" id="page-about">
+          <div class="about-container">
+            <div class="about-card">
+              <div class="app-logo large">
+                <div class="logo-icon large">
+                  <div class="logo-inner"></div>
+                </div>
+                <h2 class="logo-text">Lịch Công Việc</h2>
+              </div>
+              
+              <p class="app-version">Phiên bản 1.0.0 (Premium Planner)</p>
+              
+              <div class="about-divider"></div>
+              
+              <p class="about-desc">
+                Một ứng dụng lập lịch trình cá nhân được tối ưu hóa tỉ mỉ, giúp quản lý thời gian và sắp xếp công việc hiệu quả trong ngày. Tích hợp sâu với Telegram API giúp đảm bảo bạn không bao giờ bỏ lỡ các công việc quan trọng bằng cách đẩy thông báo tự động.
+              </p>
+              
+              <div class="features-list-box">
+                <h4>Các tính năng nổi bật:</h4>
+                <ul>
+                  <li>Hệ thống nhắc nhở tự động theo thời gian thực (định kỳ mỗi giây).</li>
+                  <li>Tích hợp Telegram Bot API gửi nhắc nhở và tự động xóa tin nhắn nhắc cũ khi hoàn thành công việc để giữ cuộc trò chuyện sạch sẽ.</li>
+                  <li>Chế độ hiển thị Lịch Tháng trực quan với các chấm chỉ báo màu của danh mục.</li>
+                  <li>Thiết kế vẽ tay hoàn toàn bằng mã CSS thuần túy, không tải bất kỳ bộ icon hay thư viện ngoài.</li>
+                  <li>Hỗ trợ xuất/nhập file cấu hình định dạng JSON linh hoạt.</li>
+                  <li>Chế độ tối thông minh tự động đổi màu dịu mắt.</li>
+                </ul>
+              </div>
+              
+              <p class="copyright-text">© 2026 Lịch Công Việc. Được thiết kế bởi Kỹ sư Frontend chuyên nghiệp.</p>
+            </div>
+          </div>
+        </section>
+        
+      </div>
+      
+      <!-- Floating Action Button for mobile add task -->
+      <button class="fab-btn" id="fab-add-task" aria-label="Thêm công việc">
+        <span class="css-icon icon-plus white large"></span>
+      </button>
+    </main>
+  </div>
+  
+  <!-- ==================================== -->
+  <!-- MODAL: ADD / EDIT TASK -->
+  <!-- ==================================== -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-title">Thêm công việc mới</h3>
+        <button class="modal-close-btn" id="btn-close-task-modal" aria-label="Đóng">
+          <span class="css-icon icon-close"></span>
+        </button>
+      </div>
+      
+      <form id="task-form" class="modal-form">
+        <input type="hidden" id="task-id">
+        
+        <div class="form-group">
+          <label for="task-name" class="form-label">Tên công việc <span class="required">*</span></label>
+          <input type="text" id="task-name" class="form-input" required placeholder="Ví dụ: Học lập trình Python cơ bản">
+        </div>
+        
+        <div class="form-group">
+          <label for="task-desc" class="form-label">Mô tả chi tiết</label>
+          <textarea id="task-desc" class="form-textarea" placeholder="Nhập ghi chú hoặc hướng dẫn cho công việc..."></textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="task-category" class="form-label">Danh mục <span class="required">*</span></label>
+            <select id="task-category" class="form-select" required>
+              <option value="Học tập">Học tập</option>
+              <option value="Công việc">Công việc</option>
+              <option value="Cá nhân">Cá nhân</option>
+              <option value="Gia đình">Gia đình</option>
+              <option value="Sức khỏe">Sức khỏe</option>
+              <option value="Khác" selected>Khác</option>
+            </select>
+          </div>
+          
+          <div class="form-group col-6">
+            <label for="task-priority" class="form-label">Mức độ ưu tiên <span class="required">*</span></label>
+            <select id="task-priority" class="form-select" required>
+              <option value="Thấp">Thấp</option>
+              <option value="Trung bình" selected>Trung bình</option>
+              <option value="Cao">Cao</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="task-date" class="form-label">Ngày thực hiện <span class="required">*</span></label>
+            <input type="date" id="task-date" class="form-input" required>
+          </div>
+          
+          <div class="form-group col-6">
+            <label for="task-time" class="form-label">Giờ nhắc nhở <span class="required">*</span></label>
+            <input type="time" id="task-time" class="form-input" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="task-color" class="form-label">Màu sắc chỉ báo</label>
+            <div class="color-picker-wrapper">
+              <input type="color" id="task-color" class="color-picker-input" value="#7c3aed">
+              <span class="color-preview-text" id="color-preview-val">#7c3aed</span>
+            </div>
+          </div>
+          
+          <div class="form-group col-6">
+            <label for="task-repeat" class="form-label">Lặp lại</label>
+            <select id="task-repeat" class="form-select">
+              <option value="none">Không lặp lại</option>
+              <option value="daily">Hàng ngày</option>
+              <option value="weekly">Hàng tuần</option>
+              <option value="monthly">Hàng tháng</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group" id="task-status-edit-group" style="display:none;">
+          <label for="task-status" class="form-label">Trạng thái công việc</label>
+          <select id="task-status" class="form-select">
+            <option value="Chưa bắt đầu">Chưa bắt đầu</option>
+            <option value="Đang thực hiện">Đang thực hiện</option>
+            <option value="Hoàn thành">Hoàn thành</option>
+            <option value="Quá hạn">Quá hạn</option>
+          </select>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-task">Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-task">Lưu lại</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- ==================================== -->
+  <!-- MODAL: DELETE CONFIRMATION -->
+  <!-- ==================================== -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h3>Xác nhận xóa</h3>
+        <button class="modal-close-btn" id="btn-close-delete-modal" aria-label="Đóng">
+          <span class="css-icon icon-close"></span>
+        </button>
+      </div>
+      <div class="modal-body-content">
+        <p>Bạn có chắc chắn muốn xóa công việc này? Công việc sẽ được chuyển vào thùng rác của Lịch sử.</p>
+        <p class="delete-task-preview-name" id="delete-task-name"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-delete">Hủy bỏ</button>
+        <button class="btn btn-danger" id="btn-confirm-delete">Đồng ý xóa</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ==================================== -->
+  <!-- MODAL: SYSTEM ALARM POPUP -->
+  <!-- ==================================== -->
+  <div class="modal-overlay alert-modal-overlay" id="alarm-modal">
+    <div class="modal-box modal-alert">
+      <div class="alarm-header-graphic">
+        <div class="alarm-bell-icon">
+          <div class="bell-body"></div>
+          <div class="bell-clapper"></div>
+        </div>
+      </div>
+      <div class="alarm-body-content">
+        <div class="alarm-tag">NHẮC NHỞ CÔNG VIỆC</div>
+        <h3 id="alarm-task-name">Tên công việc nhắc nhở</h3>
+        <p class="alarm-time-info" id="alarm-task-time-info">Giờ hẹn: 19:00 - Danh mục: Học tập</p>
+        <p class="alarm-desc" id="alarm-task-desc">Chi tiết công việc...</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-alarm-snooze">Nhắc lại sau (5p)</button>
+        <button class="btn btn-primary" id="btn-alarm-dismiss">Đã hiểu</button>
+        <button class="btn btn-success" id="btn-alarm-complete">Hoàn thành ngay</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
